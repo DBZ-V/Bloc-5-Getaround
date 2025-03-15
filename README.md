@@ -82,80 +82,76 @@ Sur python
 ```
 import requests
 
-data = [
-    {
-        "model_key": "sting",
-        "mileage": int,
-        "engine_power": int,
-        "fuel": "sting",
-        "paint_color": "sting",
-        "car_type": "sting",
-        "private_parking_available": boolean,
-        "has_gps": boolean,
-        "has_air_conditioning": boolean,
-        "automatic_car": boolean,
-        "has_getaround_connect": boolean,
-        "has_speed_regulator": boolean,
-        "winter_tires": boolean
-    }
-]
+# Exemple générique de données à envoyer à l'API
+data = {
+    "data": [
+        {
+            "model_key": "string",
+            "mileage": int,
+            "engine_power": int,
+            "fuel": "string",
+            "paint_color": "string",
+            "car_type": "string",
+            "private_parking_available": True,
+            "has_gps": False,
+            "has_air_conditioning": True,
+            "automatic_car": False,
+            "has_getaround_connect": True,
+            "has_speed_regulator": False,
+            "winter_tires": False
+        }
+    ]
+}
 
-# Requête POST vers ton API locale
+# Envoi de la requête à l'API
 response = requests.post("http://localhost:7860/predict", json=data)
 
 # Affichage de la réponse JSON
+print(response.status_code)
 print(response.json())
+
 ```
 exemple
 ```
 import requests
 
-# Exemples de données pour la prédiction
-data = [
-    {
-        "model_key": "Citroën",
-        "mileage": 140411,
-        "engine_power": 100,
-        "fuel": "diesel",
-        "paint_color": "black",
-        "car_type": "convertible",
-        "private_parking_available": True,
-        "has_gps": True,
-        "has_air_conditioning": False,
-        "automatic_car": False,
-        "has_getaround_connect": True,
-        "has_speed_regulator": True,
-        "winter_tires": True
-    }
-]
+data = {
+    "data": [ 
+        {
+            "model_key": "Citroen",
+            "mileage": 20000,
+            "engine_power": 120,
+            "fuel": "diesel",
+            "paint_color": "black",
+            "car_type": "sedan",
+            "private_parking_available": True,
+            "has_gps": True,
+            "has_air_conditioning": False,
+            "automatic_car": False,
+            "has_getaround_connect": True,
+            "has_speed_regulator": True,
+            "winter_tires": False
+        }
+    ]
+}
 
-# Requête POST vers ton API locale
+# Maintenant, envoie la requête corrigée
 response = requests.post("http://localhost:7860/predict", json=data)
 
-# Affichage de la réponse JSON
+# Affiche clairement la réponse
+print(response.status_code)
 print(response.json())
+
 
 ```
 Terminal
 ```
-curl -X POST "http://localhost:7860/predict" -H "Content-Type: application/json" -d '[{
-  "model_key": "string", 
-  "mileage": "int", 
-  "engine_power": "int", 
-  "fuel": "string", 
-  "paint_color": "string", 
-  "car_type": "string", 
-  "private_parking_available": "boolean", 
-  "has_gps": "boolean", 
-  "has_air_conditioning": "boolean", 
-  "automatic_car": "boolean", 
-  "has_getaround_connect": "boolean", 
-  "has_speed_regulator": "boolean", 
-  "winter_tires": "boolean"
-}]'
+curl -X POST "http://127.0.0.1:7860/predict" -H "Content-Type: application/json" -d "{\"data\":[{\"model_key\":\"string\",\"mileage\":int,\"engine_power\":int,\"fuel\":\"string\",\"paint_color\":\"string\",\"car_type\":\"string\",\"private_parking_available\":true,\"has_gps\":false,\"has_air_conditioning\":true,\"automatic_car\":false,\"has_getaround_connect\":true,\"has_speed_regulator\":false,\"winter_tires\":false}]}"
+
 
 ```
 exemple
 ```
-curl -X POST "http://localhost:7860/predict" -H "Content-Type: application/json" -d '[{"model_key": "Citroën", "mileage": 140411, "engine_power": 100, "fuel": "diesel", "paint_color": "black", "car_type": "convertible", "private_parking_available": true, "has_gps": true, "has_air_conditioning": false, "automatic_car": false, "has_getaround_connect": true, "has_speed_regulator": true, "winter_tires": true}]'
+curl -X POST "http://127.0.0.1:7860/predict" -H "Content-Type: application/json" -d "{\"data\":[{\"model_key\":\"BMW\",\"mileage\":20000,\"engine_power\":120,\"fuel\":\"diesel\",\"paint_color\":\"black\",\"car_type\":\"sedan\",\"private_parking_available\":true,\"has_gps\":true,\"has_air_conditioning\":true,\"automatic_car\":false,\"has_getaround_connect\":true,\"has_speed_regulator\":true,\"winter_tires\":false}]}"
+
 
