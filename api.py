@@ -3,15 +3,20 @@ import joblib
 import pandas as pd
 from pydantic import BaseModel
 from typing import List
+import os
 
-# Charger le modèle et le préprocesseur enregistrés avec joblib
-model = joblib.load('models/rental_price_model.joblib')  # Charger le modèle avec joblib
-preprocessor = joblib.load('models/preprocessor.joblib')  # Charger le préprocesseur avec joblib
-
-# Créer l'application FastAPI
+# Créer l'application FastAPI D'ABORD !
 app = FastAPI(title="GERAROUND API", description="Like the Airbnb for cars.")
 
-# Définir un modèle Pydantic pour la validation des données d'entrée
+# Charger les modèles après
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, 'models', 'rental_price_model.joblib')
+PREPROCESSOR_PATH = os.path.join(BASE_DIR, 'models', 'preprocessor.joblib')
+
+model = joblib.load(MODEL_PATH)
+preprocessor = joblib.load(PREPROCESSOR_PATH)
+
+# Définir un modèle Pydantic clair
 class RentalData(BaseModel):
     model_key: str
     mileage: int
@@ -27,25 +32,31 @@ class RentalData(BaseModel):
     has_speed_regulator: bool
     winter_tires: bool
 
-# L'ordre des colonnes attendu par le préprocesseur
+class RentalDataList(BaseModel):
+    data: List[RentalData]
+
 expected_columns = [
     "model_key", "mileage", "engine_power", "fuel", "paint_color", "car_type",
     "private_parking_available", "has_gps", "has_air_conditioning", "automatic_car",
     "has_getaround_connect", "has_speed_regulator", "winter_tires"
 ]
 
-# Endpoint pour les prédictions
+# Endpoint racine pour tester facilement
+@app.get("/")
+async def root():
+    return {"message": "Bienvenue sur GERAROUND API."}
+
+# Endpoint clair et robuste
 @app.post("/predict")
-async def predict(data: List[RentalData]):
-    # Convertir les données reçues en DataFrame en respectant l'ordre des colonnes attendu
-    data_dict = [item.dict() for item in data]  # Convertir les données en dictionnaires
-    input_data = pd.DataFrame(data_dict, columns=expected_columns)  # Créer le DataFrame avec l'ordre des colonnes
+async def predict(rental_data_list: RentalDataList):
+    # Conversion propre en DataFrame
+    input_data = pd.DataFrame(
+        [item.dict() for item in rental_data_list.data],
+        columns=expected_columns
+    )
 
-    # Appliquer le préprocesseur sur les données d'entrée
+    # Pré-traitement et prédiction
     processed_data = preprocessor.transform(input_data)
-
-    # Faire la prédiction avec le modèle
     prediction = model.predict(processed_data)
 
-    # Retourner la prédiction sous forme de JSON
     return {"prediction": prediction.tolist()}
