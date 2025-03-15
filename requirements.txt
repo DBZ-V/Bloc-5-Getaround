@@ -2,6 +2,7 @@ streamlit
 fastapi
 joblib
 uvicorn
+gunicorn 
 joblib
 pandas
 numpy
