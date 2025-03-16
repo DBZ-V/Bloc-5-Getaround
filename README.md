@@ -9,7 +9,7 @@ L’objectif est d’optimiser les prix de location pour les propriétaires de v
 ✔ API FastAPI : Permet aux utilisateurs de soumettre les détails d'une voiture et d'obtenir une estimation du prix de location.
 ✔ Tableau de bord Streamlit : Interface ergonomique pour soumettre les détails d'un véhicule et afficher les prédictions.
 ✔ Déploiement : Hébergé sur Hugging Face Spaces pour un accès en ligne simple et rapide.
-
+[![Hugging Face Space](https://img.shields.io/badge/Hugging%20Face-API%20Online-blue?logo=huggingface)](https://dbzv-fastapigetaround.hf.space)
 ## 📂 Structure du Projet :
 ```
 ├── 1-streamlit.py            # Dashboard Streamlit d'analyse des seuils
